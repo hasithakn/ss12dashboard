@@ -4,6 +4,8 @@ parameters:
     #parameter_name: value
 
 services:
+  api.curl:
+    class: AppBundle\Services\API\CURL
     #service_name:
     #    class: AppBundle\Directory\ClassName
     #    arguments: ['@another_service_name', 'plain_value', '%parameter_name%']

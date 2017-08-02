@@ -23,24 +23,24 @@ class ApiController extends Controller
     {
         //sends the compartment list from email
 
-        if ($request->getMethod() == 'GET') {
 
-            $email = $request->query->get('email');
-            $repository = $this->getDoctrine()->getRepository('AppBundle:Compartment');
-            $compartments = $repository->findBy(array('email' => $email));
-            $compartmentList = [];
-            foreach ($compartments as $compartment) {
+        $email = $request->query->get('email');
+        $repository = $this->getDoctrine()->getRepository('AppBundle:Compartment');
+        $compartments = $repository->findBy(array('email' => $email));
+        $compartmentList = [];
+        //var_dump($compartments);
 
-                $temp = new \stdClass();
-                $temp->email = $compartment->getEmail();
-                $temp->compartmentId = $compartment->getCompartmentId();
-                $temp->Item = $compartment->getItem();
-                $temp->expireDate = $compartment->getExpireDate();
-                $temp->storeDate = $compartment->getStoreDate();
-                $compartmentList[] = $temp;
-            }
+        foreach ($compartments as $compartment) {
 
+            $temp = new \stdClass();
+            $temp->email = $email;
+            $temp->compartmentId = $compartment->getCompartmentId();
+            $temp->Item = $compartment->getItem();
+            $temp->expireDate = $compartment->getExpireDate();
+            $temp->storeDate = $compartment->getStoreDate();
+            $compartmentList[] = $temp;
         }
+
         return new JsonResponse($compartmentList);
     }
 
@@ -52,30 +52,29 @@ class ApiController extends Controller
     {
         //sends the compartment's least data from compartmentId
 
-        if ($request->getMethod() == 'GET') {
 
-            $compartmentId = $request->query->get('compartmentId');
-            var_dump($compartmentId);
-            $repository = $this->getDoctrine()->getRepository('AppBundle:DeviceData');
-            $compartmentData = $repository->findBy(
-                array('compartmentId' => $compartmentId),
-                array('timeStamp' => 'DESC'),
-                1
-            );
-            // var_dump($compartmentData);
-            $responce = [];
-            foreach ($compartmentData as $compartment) {
+        $compartmentId = $request->query->get('compartmentId');
+        //var_dump($compartmentId);
+        $repository = $this->getDoctrine()->getRepository('AppBundle:DeviceData');
+        $compartmentData = $repository->findBy(
+            array('compartmentId' => $compartmentId),
+            array('timeStamp' => 'DESC'),
+            1
+        );
+        // var_dump($compartmentData);
+        $responce = [];
+        foreach ($compartmentData as $compartment) {
 
-                $temp = new \stdClass();
-                $temp->temp = $compartment->getTemp();
-                $temp->humid = $compartment->getHumid();
-                $temp->compartment_id = $compartment->getCompartmentId();
-                $temp->time_stamp = $compartment->getTimeStamp();
-                $temp->food_status = $compartment->getFoodStatus();
-                $responce[] = $temp;
-            }
-
+            $temp = new \stdClass();
+            $temp->temp = $compartment->getTemp();
+            $temp->humid = $compartment->getHumid();
+            $temp->compartment_id = $compartment->getCompartmentId();
+            $temp->time_stamp = $compartment->getTimeStamp();
+            $temp->food_status = $compartment->getFoodStatus();
+            $responce[] = $temp;
         }
+
+
         return new JsonResponse($responce);
     }
 

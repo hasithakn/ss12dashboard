@@ -8,77 +8,77 @@ namespace AppBundle\Entity;
  * Time: 1:05 AM
  */
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="user")
  */
-class User
+class User implements UserInterface
 {
 
     /**
-     * @ORM\Column(type="string", length=100 , unique=true)
+     * @ORM\Column(type="integer", nullable=true, columnDefinition="INT AUTO_INCREMENT UNIQUE")
+     */
+    private $id;
+
+    /**
+     * @ORM\Column(type="string", length=64)
+     */
+    private $password;
+
+    /**
+     * @ORM\Column(type="string", length=60, unique=true)
      * @ORM\Id
      */
     private $email;
 
     /**
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(name="is_active", type="boolean")
      */
-    private $password;
+    private $isActive;
 
-
-    /**
-     * Set email
-     *
-     * @param string $email
-     * @return User
-     */
-    public function setEmail($email)
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
-    /**
-     * Get email
-     *
-     * @return string
-     */
-    public function getEmail()
+    public function getUsername()
     {
         return $this->email;
     }
 
-    /**
-     * Set password
-     *
-     * @param string $password
-     * @return User
-     */
-    public function setPassword($password)
+    public function getSalt()
     {
-        $this->password = $password;
-
-        return $this;
+        // you *may* need a real salt depending on your encoder
+        // see section on salt below
+        return null;
     }
 
-    /**
-     * Get password
-     *
-     * @return string
-     */
     public function getPassword()
     {
         return $this->password;
     }
 
+    public function getRoles()
+    {
+        return array('ROLE_USER');
+
+
+    }
+
     /**
-     * Get id
-     *
-     * @return integer
+     * @param mixed $password
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
+    }
+
+    public function eraseCredentials()
+    {
+
+
+    }
+
+    /**
+     * @return mixed
      */
     public function getId()
     {
@@ -86,15 +86,43 @@ class User
     }
 
     /**
-     * Set id
-     *
-     * @param integer $id
-     * @return User
+     * @param mixed $id
      */
     public function setId($id)
     {
         $this->id = $id;
-
-        return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param mixed $email
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIsActive()
+    {
+        return $this->isActive;
+    }
+
+    /**
+     * @param mixed $isActive
+     */
+    public function setIsActive($isActive)
+    {
+        $this->isActive = $isActive;
+    }
+
 }
