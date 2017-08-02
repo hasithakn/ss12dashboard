@@ -14,6 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,7 +36,13 @@ class UserController extends Controller
 
             $form = $this->createFormBuilder($user)
                 ->add('email', EmailType::class, array('label' => 'Email'))
-                ->add('password', PasswordType::class, array('label' => 'Password'))
+                ->add('password', RepeatedType::class, array(
+                    'type' => PasswordType::class,
+                    'invalid_message' => 'The password fields must match.',
+                    'options' => array('attr' => array('class' => 'password-field')),
+                    'required' => true,
+                    'first_options' => array('label' => 'Password'),
+                    'second_options' => array('label' => 'Confirm Password')))
                 ->add('save', SubmitType::class, array('label' => 'Submit'))
                 ->getForm();
 
@@ -74,11 +81,13 @@ class UserController extends Controller
             foreach ($compartments as $cmp) {
                 $res = $curlService->httppost('http://localhost/ss12dashboard/web/app_dev.php/api2', array('compartmentId' => $cmp->getCompartmentId()));
                 $res = json_decode($res);
-                $cmp->temp = $res[0]->temp;
-                $cmp->humid = $res[0]->humid;
-                $cmp->time_stamp = $res[0]->time_stamp;
-                $cmp->food_status = $res[0]->food_status;
-                array_push($toTwing, $cmp);
+                if ($res != null) {
+                    $cmp->temp = $res[0]->temp;
+                    $cmp->humid = $res[0]->humid;
+                    $cmp->time_stamp = $res[0]->time_stamp;
+                    $cmp->food_status = $res[0]->food_status;
+                    array_push($toTwing, $cmp);
+                }
             }
 
             return $this->render('user/profile.html.twig', array(

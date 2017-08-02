@@ -159,4 +159,14 @@ class DeviceData
     {
         return $this->foodStatus;
     }
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 }

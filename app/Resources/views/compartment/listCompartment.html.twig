@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Hello {{ email }}</h1>
+    {% for compartment in compartments %}
+        <div style="background-color: #0088CC">
+            <h1> {{ compartment.compartmentId }}</h1>
+            <h1> {{ compartment.item }}</h1>
+            <a href="{{ url('deleteCompartment',{compartment_id: compartment.compartmentId }) }}" class="btn btn-danger">Delete</a>
+        </div>
+    {% endfor %}
+{% endblock %}

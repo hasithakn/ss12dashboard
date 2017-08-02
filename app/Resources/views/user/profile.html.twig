@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Hello {{ email }}</h1>
+    {% for compartment in compartments %}
+        <div style="background-color: #0088CC">
+            <h1> {{ compartment.compartmentId }}</h1>
+            <h1> {{ compartment.item }}</h1>
+            <h1> {{ compartment.expireDate.date[:10] }}</h1>
+            <h1> {{ compartment.storeDate.date[:10] }}</h1>
+            <h1> {{ compartment.temp }}</h1>
+            <h1> {{ compartment.humid}}</h1>
+            <h1> {{ compartment.food_status}}</h1>
+            <h1> {{ compartment.time_stamp}}</h1>
+
+        </div>
+    {% endfor %}
+{% endblock %}
