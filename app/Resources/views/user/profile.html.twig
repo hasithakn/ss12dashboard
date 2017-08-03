@@ -1,18 +1,50 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Hello {{ email }}</h1>
+
+    {% block javascripts %}
+        <script>
+            $(document).ready(function () {
+                console.log('ready');
+                var compartments = {{ compartments|json_encode|raw }};
+                jQuery.each(compartments, function (i, compartment) {
+                    console.log(compartment.compartment_id);
+                    setInterval(function () {
+                        ajaxReq(compartment.compartment_id);
+                    }, 2000);
+                });
+
+
+                function ajaxReq(compartmentId) {
+                    $.get("http://localhost/ss12dashboard/web/app_dev.php/api2",
+                            {
+                                'compartmentId': compartmentId
+                            },
+                            function (data) {
+                                console.log(data[0]);
+                                $("#" + compartmentId + "temp").html("temp: " + data[0].temp);
+                                $("#" + compartmentId + "humid").html("humid: " + data[0].humid);
+                                $("#" + compartmentId + "foodStatus").html("foodStatus: " + data[0].food_status);
+                                $("#" + compartmentId + "timestamp").html("Time: " + data[0].time_stamp);
+                            });
+                }
+
+            });
+        </script>
+    {% endblock %}
+
+    <h2>Hello {{ email }}</h2>
     {% for compartment in compartments %}
         <div style="background-color: #0088CC">
-            <h1> {{ compartment.compartmentId }}</h1>
-            <h1> {{ compartment.item }}</h1>
-            <h1> {{ compartment.expireDate.date[:10] }}</h1>
-            <h1> {{ compartment.storeDate.date[:10] }}</h1>
-            <h1> {{ compartment.temp }}</h1>
-            <h1> {{ compartment.humid}}</h1>
-            <h1> {{ compartment.food_status}}</h1>
-            <h1> {{ compartment.time_stamp}}</h1>
-
+            <h4 id="{{ compartment.compartmentId }}compartmentId"> {{ compartment.compartmentId }}</h4>
+            <h4 id="{{ compartment.compartmentId }}item"> {{ compartment.item }}</h4>
+            <h5 id="{{ compartment.compartmentId }}edate"> {{ compartment.expireDate.date[:10] }}</h5>
+            <h5 id="{{ compartment.compartmentId }}sdate"> {{ compartment.storeDate.date[:10] }}</h5>
+            <h5 id="{{ compartment.compartmentId }}temp"> {{ compartment.temp }}</h5>
+            <h5 id="{{ compartment.compartmentId }}humid"> {{ compartment.humid }}</h5>
+            <h5 id="{{ compartment.compartmentId }}foodStatus"> {{ compartment.food_status }}</h5>
+            <h5 id="{{ compartment.compartmentId }}timestamp"> {{ compartment.time_stamp }}</h5>
         </div>
     {% endfor %}
+
 {% endblock %}

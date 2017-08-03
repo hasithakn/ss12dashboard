@@ -86,10 +86,10 @@ class UserController extends Controller
                     $cmp->humid = $res[0]->humid;
                     $cmp->time_stamp = $res[0]->time_stamp;
                     $cmp->food_status = $res[0]->food_status;
+                    $cmp->compartment_id = $res[0]->compartment_id;
                     array_push($toTwing, $cmp);
                 }
             }
-
             return $this->render('user/profile.html.twig', array(
                 'email' => $email,
                 'compartments' => $toTwing

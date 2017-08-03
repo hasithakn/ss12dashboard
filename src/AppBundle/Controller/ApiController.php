@@ -69,7 +69,14 @@ class ApiController extends Controller
             $temp->temp = $compartment->getTemp();
             $temp->humid = $compartment->getHumid();
             $temp->compartment_id = $compartment->getCompartmentId();
-            $temp->time_stamp = $compartment->getTimeStamp();
+
+            $timestamp = substr($compartment->getTimeStamp(), 0, -3);
+            $datetimeFormat = 'Y-m-d H:i:s';
+            $date = new \DateTime();
+            $date->setTimestamp($timestamp);
+            $dateTime = $date->format($datetimeFormat);
+
+            $temp->time_stamp = $dateTime;
             $temp->food_status = $compartment->getFoodStatus();
             $responce[] = $temp;
         }
